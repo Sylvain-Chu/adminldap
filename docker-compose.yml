@@ -1,0 +1,19 @@
+version: "3.8"
+
+services:
+  adminldap:
+    build: .
+    container_name: adminldap
+    env_file:
+      - ./.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data/certs:/etc/certs:ro
+      - ./data:/app/data
+    restart: unless-stopped
+    networks:
+      - ldap-net
+networks:
+  ldap-net:
+    driver: bridge
