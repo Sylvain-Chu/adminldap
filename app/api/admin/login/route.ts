@@ -1,31 +1,29 @@
-import { NextResponse } from "next/server"
+import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const body = await req.json()
-  const { password } = body
-  
-  // Simple password check - in production use proper auth
-  const adminPassword = process.env.ADMIN_PASSWORD || "admin123"
-  
+  const body = await req.json();
+  const { password } = body;
+
+  const adminPassword = process.env.ADMIN_PASSWORD || "admin123";
+
   if (password === adminPassword) {
-    const response = NextResponse.json({ ok: true })
-    
-    // Set secure cookie
+    const response = NextResponse.json({ ok: true });
+
     response.cookies.set("admin-auth", "authenticated", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
       maxAge: 60 * 60 * 24, // 24 hours
-    })
-    
-    return response
+    });
+
+    return response;
   }
-  
-  return new NextResponse("Invalid password", { status: 401 })
+
+  return new NextResponse("Invalid password", { status: 401 });
 }
 
 export async function DELETE() {
-  const response = NextResponse.json({ ok: true })
-  response.cookies.delete("admin-auth")
-  return response
+  const response = NextResponse.json({ ok: true });
+  response.cookies.delete("admin-auth");
+  return response;
 }

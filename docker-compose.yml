@@ -1,11 +1,11 @@
-version: "3.8"
-
 services:
   adminldap:
     build: .
     container_name: adminldap
     env_file:
       - ./.env
+    environment: # <-- AJOUTEZ CECI
+      - NODE_EXTRA_CA_CERTS=/etc/certs/homelab-ca.crt
     ports:
       - "3000:3000"
     volumes:
@@ -14,6 +14,9 @@ services:
     restart: unless-stopped
     networks:
       - ldap-net
+      - secure_net
 networks:
   ldap-net:
     driver: bridge
+  secure_net:
+    external: true
